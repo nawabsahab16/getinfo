@@ -1,31 +1,51 @@
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import { Github } from "lucide-react"
+import { ModeToggle } from "@/components/mode-toggle"
 import Link from "next/link"
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-background to-muted flex items-center justify-center p-4">
-      <Card className="max-w-lg w-full p-8 space-y-6">
-        <div className="text-center space-y-2">
-          <Github className="w-12 h-12 mx-auto text-primary" />
-          <h1 className="text-3xl font-bold">GitHub Analytics Dashboard</h1>
-          <p className="text-muted-foreground">
-            Visualize your GitHub activity and get insights into your contributions
+    <main className="min-h-screen bg-gradient-to-b from-background to-muted">
+      <header className="container mx-auto px-4 py-6 flex justify-end">
+        <ModeToggle />
+      </header>
+      <div className="container mx-auto px-4 flex flex-col items-center justify-center space-y-8 pt-20">
+        <div className="text-center space-y-4 max-w-2xl">
+          <Github className="w-16 h-16 mx-auto text-primary" />
+          <h1 className="text-4xl font-bold tracking-tight">
+            Discover Your GitHub Story
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            Visualize your GitHub journey with beautiful analytics and insights. Enter any GitHub username to get started.
           </p>
         </div>
-        <div className="space-y-4">
-          <Link href="/api/auth/signin">
-            <Button className="w-full" size="lg">
-              <Github className="mr-2 h-4 w-4" />
-              Sign in with GitHub
-            </Button>
-          </Link>
-          <p className="text-sm text-center text-muted-foreground">
-            By signing in, you agree to allow this application to read your GitHub public data
-          </p>
-        </div>
-      </Card>
+        <Card className="w-full max-w-md p-6">
+          <form 
+            className="flex flex-col space-y-4"
+            action={(formData) => {
+              const username = formData.get("username")
+              window.location.href = `/dashboard/${username}`
+            }}
+          >
+            <div className="flex space-x-2">
+              <Input
+                name="username"
+                placeholder="Enter GitHub username"
+                required
+                className="flex-1"
+              />
+              <Button type="submit">
+                Analyze
+              </Button>
+            </div>
+            <p className="text-xs text-center text-muted-foreground">
+              No authentication required. View public GitHub data instantly.
+            </p>
+          </form>
+        </Card>
+      </div>
     </main>
   )
 }

@@ -1,32 +1,44 @@
-"use client"
-
-import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
-import { useSession, signOut } from "next-auth/react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Github, LogOut } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Github, Home } from "lucide-react"
+import Link from "next/link"
 
-export function DashboardHeader() {
-  const { data: session } = useSession()
-
+export function DashboardHeader({ 
+  username,
+  userData
+}: { 
+  username: string
+  userData: any
+}) {
   return (
     <header className="border-b">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Github className="h-6 w-6" />
-          <h1 className="text-xl font-bold">GitHub Analytics</h1>
+          <Link href="/">
+            <Button variant="ghost" size="icon">
+              <Home className="h-5 w-5" />
+            </Button>
+          </Link>
+          <div className="flex items-center space-x-3">
+            <Avatar>
+              <AvatarImage src={userData.avatar_url} />
+              <AvatarFallback>{username[0].toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <div>
+              <h1 className="text-xl font-bold">{userData.name || username}</h1>
+              <p className="text-sm text-muted-foreground">{userData.bio || "No bio available"}</p>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
+          <Link href={`https://github.com/${username}`} target="_blank">
+            <Button variant="outline" size="sm">
+              <Github className="h-4 w-4 mr-2" />
+              View Profile
+            </Button>
+          </Link>
           <ModeToggle />
-          <Avatar>
-            <AvatarImage src={session?.user?.image || ""} />
-            <AvatarFallback>
-              {session?.user?.name?.charAt(0) || "U"}
-            </AvatarFallback>
-          </Avatar>
-          <Button variant="ghost" size="icon" onClick={() => signOut()}>
-            <LogOut className="h-5 w-5" />
-          </Button>
         </div>
       </div>
     </header>
